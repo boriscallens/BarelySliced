@@ -1,0 +1,30 @@
+{
+  "author": "Boris Callens",
+  "classifications": [
+    "Common",
+    "Code"
+  ],
+  "identity": "BarelySliced.feature",
+  "name": "Barely Sliced Feature",
+  "shortName": "bsfeature",
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "sourceName": "MyFeature",
+  "preferNameDirectory": false,
+  "symbols": {
+    "DefaultNamespace": {
+      "type": "bind",
+      "binding": "msbuild:RootNamespace",
+      "replaces": "MySolution.Business",
+      "defaultValue": "BarelySliced.Business"
+    }
+  },
+  "constraints": {
+    "csharp-only": {
+      "type": "project-capability",
+      "args": "CSharp"
+    }
+  }
+}
