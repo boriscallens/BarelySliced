@@ -4,9 +4,9 @@
     "Common",
     "Code"
   ],
-  "identity": "BarelySliced.feature",
-  "name": "Barely Sliced Feature",
-  "shortName": "bsfeature",
+  "identity": "BarelySliced.feature.business",
+  "name": "Barely Sliced Feature Business",
+  "shortName": "bsfeature-business",
   "tags": {
     "language": "C#",
     "type": "item"
@@ -17,7 +17,7 @@
     "DefaultNamespace": {
       "type": "bind",
       "binding": "msbuild:RootNamespace",
-      "replaces": "MySolution.Business",
+      "replaces": "BarelySliced.Business",
       "defaultValue": "BarelySliced.Business"
     }
   },

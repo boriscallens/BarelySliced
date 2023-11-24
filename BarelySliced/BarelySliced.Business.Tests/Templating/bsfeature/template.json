@@ -1,0 +1,46 @@
+{
+  "author": "Boris Callens",
+  "classifications": [
+    "Common",
+    "Code"
+  ],
+  "identity": "BarelySliced.feature.business.tests",
+  "name": "Barely Sliced Feature Business Tests",
+  "shortName": "bsfeature-tests",
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "sourceName": "MyFeature",
+  "preferNameDirectory": false,
+  "symbols": {
+    "DefaultNamespace": {
+      "type": "bind",
+      "binding": "msbuild:RootNamespace",
+      "replaces": "BarelySliced.Business.Tests",
+      "defaultValue": "BarelySliced.Business.Tests"
+    },
+    "NamespaceUnderTest": {
+      "type": "generated",
+      "generator": "regex",
+      "dataType": "string",
+      "replaces": "BarelySliced.Business",
+      "defaultValue": "BarelySliced.Business",
+      "parameters": {
+        "source": "DefaultNamespace",
+        "steps": [
+          {
+            "regex": "\\.Tests$",
+            "replacement": ""
+          }
+        ]
+      }
+    }
+  },
+  "constraints": {
+    "csharp-only": {
+      "type": "project-capability",
+      "args": "CSharp & TestContainer"
+    }
+  }
+}

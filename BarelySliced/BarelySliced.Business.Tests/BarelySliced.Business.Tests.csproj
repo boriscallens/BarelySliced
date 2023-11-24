@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
@@ -25,5 +26,17 @@
   <ItemGroup>
     <ProjectReference Include="..\BarelySliced.Business\BarelySliced.Business.csproj" />
   </ItemGroup>
+
+  <Target Name="BsFeatureTemplate" AfterTargets="Build">
+    <ItemGroup>
+        <MyFeature Include="Features\MyFeature\**\*.*" />
+    </ItemGroup>
+    <ItemGroup>
+        <MyFeatureConfig Include="Templating\bsfeature\template.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MyFeature)" DestinationFolder="$(OutputPath)bsfeature\Features\MyFeature\%(RecursiveDir)" />
+    <Copy SourceFiles="@(MyFeatureConfig)" DestinationFolder="$(OutputPath)bsfeature\.template.config\" />
+    <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bsfeature --force" />
+  </Target>
 
 </Project>
