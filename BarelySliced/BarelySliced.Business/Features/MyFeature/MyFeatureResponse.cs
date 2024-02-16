@@ -1,5 +1,5 @@
 ﻿namespace BarelySliced.Business.Features.MyFeature;
 
-public class MyFeatureResponse
+public record MyFeatureResponse
 {
 }

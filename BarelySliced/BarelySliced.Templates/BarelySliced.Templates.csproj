@@ -7,19 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BarelySliced.Persistence\BarelySliced.Persistence.csproj" />
+    <ProjectReference Include="..\BarelySliced.Business.Tests\BarelySliced.Business.Tests.csproj" />
+    <ProjectReference Include="..\BarelySliced.Business\BarelySliced.Business.csproj" />
   </ItemGroup>
 
   <Target Name="BsFeatureTemplate" AfterTargets="Build">
     <ItemGroup>
-        <MyFeature Include="Features\MyFeature\**\*.*" />
-    </ItemGroup>
-    <ItemGroup>
-        <MyFeatureConfig Include="Templating\bsfeature\template.json" />
+        <MyFeature Include="bsfeature\**\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(MyFeature)" DestinationFolder="$(OutputPath)bsfeature\Features\MyFeature\%(RecursiveDir)" />
     <Copy SourceFiles="@(MyFeatureConfig)" DestinationFolder="$(OutputPath)bsfeature\.template.config\" />

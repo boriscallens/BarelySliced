@@ -2,6 +2,6 @@
 
 namespace BarelySliced.Business.Features.MyFeature;
 
-public class MyFeatureRequest : IRequest<MyFeatureResponse>
+public record MyFeatureRequest : IRequest<MyFeatureResponse>
 {
 }

@@ -4,14 +4,14 @@
     "Common",
     "Code"
   ],
-  "identity": "BarelySliced.feature.business",
-  "name": "Barely Sliced Feature Business",
-  "shortName": "bsfeature-business",
+  "identity": "BarelySliced.projects.persistence",
+  "name": "Barely Sliced Persistence Project",
+  "shortName": "bspersistenceproject",
   "tags": {
     "language": "C#",
     "type": "item"
   },
-  "sourceName": "MyFeature",
+  "sourceName": "Sliver",
   "preferNameDirectory": false,
   "symbols": {
     "rootnamespace": {
@@ -26,7 +26,7 @@
         "source": "rootnamespace",
         "steps": [
           {
-            "regex": "\\.Business",
+            "regex": "\\.Persistence$",
             "replacement": ""
           }
         ]
@@ -81,26 +81,6 @@
           {
             "type": "const",
             "value": "Persistence"
-          }
-        ],
-        "separator": ".",
-        "removeEmptyValues": true
-      }
-    },
-    "businessNamespace": {
-      "type": "generated",
-      "generator": "join",
-      "dataType": "string",
-      "replaces": "BarelySliced.Business",
-      "parameters": {
-        "symbols": [
-          {
-            "type": "ref",
-            "value": "solutionNamespace"
-          },
-          {
-            "type": "const",
-            "value": "Business"
           }
         ],
         "separator": ".",

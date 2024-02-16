@@ -4,9 +4,9 @@
     "Common",
     "Code"
   ],
-  "identity": "BarelySliced.feature.business",
-  "name": "Barely Sliced Feature Business",
-  "shortName": "bsfeature-business",
+  "identity": "BarelySliced.projects.test",
+  "name": "Barely Sliced Business Test Project",
+  "shortName": "bsbusinesstestproject",
   "tags": {
     "language": "C#",
     "type": "item"
@@ -26,7 +26,7 @@
         "source": "rootnamespace",
         "steps": [
           {
-            "regex": "\\.Business",
+            "regex": "\\.Business.Tests$",
             "replacement": ""
           }
         ]
@@ -106,12 +106,36 @@
         "separator": ".",
         "removeEmptyValues": true
       }
+    },
+    "businessTestNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Business.Tests",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Business"
+          },
+          {
+            "type": "const",
+            "value": "Tests"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
     }
   },
   "constraints": {
     "csharp-only": {
       "type": "project-capability",
-      "args": "CSharp"
+      "args": "CSharp & TestContainer"
     }
   }
 }

@@ -10,10 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
-    <PackageReference Include="xunit" Version="2.4.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="xunit" Version="2.6.6" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -25,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BarelySliced.Business\BarelySliced.Business.csproj" />
+    <ProjectReference Include="..\BarelySliced.Infrastructure\BarelySliced.Infrastructure.csproj" />
   </ItemGroup>
 
   <Target Name="BsFeatureTemplate" AfterTargets="Build">
@@ -38,5 +40,22 @@
     <Copy SourceFiles="@(MyFeatureConfig)" DestinationFolder="$(OutputPath)bsfeature\.template.config\" />
     <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bsfeature --force" />
   </Target>
-
+  
+  <Target Name="BsTestProjectTemplate" AfterTargets="Build">
+    <ItemGroup>
+        <TestProject Include="UnittestFixture.cs" />
+        <TestProject Include="PersistenceServiceCollectionExtensions.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <TestProjectConfig Include="Templating\bstestproject\template.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MyFeature)" DestinationFolder="$(OutputPath)bsfeature\Features\MyFeature\%(RecursiveDir)" />
+    <Copy SourceFiles="@(MyFeatureConfig)" DestinationFolder="$(OutputPath)bsfeature\.template.config\" />
+	
+	<Copy SourceFiles="@(TestProject)" DestinationFolder="$(OutputPath)bstestproject\%(RecursiveDir)" />
+    <Copy SourceFiles="@(TestProjectConfig)" DestinationFolder="$(OutputPath)bstestproject\.template.config\" />
+	
+    <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bsfeature --force" />
+    <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bstestproject --force" />
+  </Target>
 </Project>

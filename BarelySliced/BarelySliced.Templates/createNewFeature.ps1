@@ -97,5 +97,4 @@ Write-Host ("    {0,-15}" -f "* api test") -NoNewline; Write-Host " $apiTestProj
 Write-Host
 
 AddFileTemplate "bsfeature-business" $businessPath
-AddFileTemplate "bstestproject" $businessTestPath
 AddFileTemplate "bsfeature-tests" $businessTestPath

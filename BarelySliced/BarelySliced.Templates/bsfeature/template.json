@@ -1,0 +1,32 @@
+{
+  "author": "Boris Callens",
+  "classifications": [
+    "Common",
+    "Code"
+  ],
+  "identity": "BarelySliced.feature",
+  "name": "Barely Sliced Feature",
+  "shortName": "bsfeature",
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "sourceName": "MyFeature",
+  "postActions": [
+    {
+      "actionId": "3A7C4B45-1F5D-4A30-959A-51B88E82B5D2",
+      "args": {
+        "executable": "powershell",
+        "args": "-File bsfeature.ps1",
+        "redirectStandardOutput": true,
+        "redirectStandardError": true
+      },
+      "manualInstructions": [
+        {
+          "text": "Run 'bsfeature.ps1'"
+        }
+      ],
+      "continueOnError": false
+    }
+  ]
+}

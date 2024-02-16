@@ -1,7 +1,15 @@
 param (
     [string]$solutionName = $(Read-Host "Please provide a solution name"),
+    [string]$domain = $(Read-Host "What domain is the solution about?"),
     [switch]$force
 )
+
+function ValidateDomain {
+    if($domain -match "\s") {
+        Write-Error "Please keep the domain to a single word or leave empty"
+        Exit 1
+    }
+}
 
 function AddSolutionItems {
     param(
@@ -28,19 +36,42 @@ EndProject
 	Add-Content -Path $slnFilePath -Value $slnContent
 }
 
-function AddFileTemplate($templateName, $path){
-    if($force) {
-        Write-Host "Force creating $templateName files at $pat" -ForegroundColor Yellow
-        dotnet new $templateName -n $featureName -o "$path" --force
-    }else {
-        Write-Host "Creating $templateName files at $pat" -ForegroundColor Cyan
-        dotnet new $templateName -n $featureName -o "$path"
+function AddFileTemplate($templateName, $featureName, $path){  
+    ## if the template name is empty, write a helpfull message and Exit
+    if([string]::IsNullOrWhiteSpace($templateName)) {
+        Write-Error "Invalid template name"
+        Exit 1
     }
+
+    ## if the path is empty or does not exist, write a helpfull message and Exit
+    if([string]::IsNullOrWhiteSpace($path)) {
+        Write-Error "Invalid output path $path"
+        Exit 1
+    }
+
+    Write-Host "Adding $templateName to $path" -ForegroundColor Yellow
+    $command = "dotnet new $templateName"
+
+    if (![string]::IsNullOrWhiteSpace($featureName)) {
+        Write-Host "Using feature name $featureName" -ForegroundColor Yellow
+        $command += " -n $featureName"
+    }
+
+    $command += " --output $path"
+
+    if ($force) {
+        Write-Host "Using force flag" -ForegroundColor Yellow
+        $command += " --force"
+    }
+
+    Invoke-Expression -Command $command
 }
 
 $originalLocation = $PWD.Path
 $folderPath = Join-Path $originalLocation $solutionName
 $slnFilePath = Join-Path $folderPath "$solutionName.sln"
+
+ValidateDomain;
 
 if (Test-Path $folderPath -PathType Container) {
     if ($force) {
@@ -59,6 +90,7 @@ Write-Host "Started creating solution $solutionName" -ForegroundColor Yellow
 dotnet new sln -n $solutionName
 dotnet new gitignore
 dotnet new editorconfig
+
 AddSolutionItems  `
     -slnFilePath $slnFilePath `
     -solutionFolderName "Misc" `
@@ -68,6 +100,7 @@ Write-Host "Adding class libraries" -ForegroundColor Yellow
 dotnet new classlib -n "$solutionName.Domain" --no-restore
 
 dotnet new classlib -n "$solutionName.Persistence" --no-restore
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" reference "$solutionName.Domain/$solutionName.Domain.csproj"
 
 dotnet new classlib -n "$solutionName.Business" --no-restore
 dotnet add "$solutionName.Business/$solutionName.Business.csproj" reference "$solutionName.Persistence/$solutionName.Persistence.csproj"
@@ -88,6 +121,7 @@ dotnet add "$solutionName.Domain.Tests/$solutionName.Domain.Tests.csproj" refere
 
 dotnet new xunit -n "$solutionName.Business.Tests" --no-restore
 dotnet add "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" reference "$solutionName.Business/$solutionName.Business.csproj"
+dotnet add "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" reference "$solutionName.Domain/$solutionName.Domain.csproj"
 dotnet add "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" reference "$solutionName.Persistence/$solutionName.Persistence.csproj"
 
 dotnet new xunit -n "$solutionName.Persistence.Tests" --no-restore
@@ -122,10 +156,14 @@ dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package 
 
 dotnet restore
 
-# AddProjectTemplate "bspersistencetestproject" $domainPath
-AddProjectTemplate "bspersistenceproject" $domainPath
-# AddProjectTemplate "bsbusinessproject" $businessPath
-AddProjectTemplate "bsbusinesstestproject" $businessTestPath
+AddFileTemplate "bspersistenceproject" $domain "$solutionName.Persistence"
+# AddFileTemplate "bsbusinessproject" $domain "$solutionName.Business"
+# AddFileTemplate "bsbusinessproject" $businessPath
+AddFileTemplate "bsbusinesstestproject" $domain "$solutionName.Business.Tests"
+
+Write-Host "Cleaning up placeholder files" -ForegroundColor Yellow
+Get-ChildItem -Recurse -Filter "class1.cs" | Remove-Item -Force
+Get-ChildItem -Recurse -Filter "unittest1.cs" | Remove-Item -Force
 
 Write-Host "Initializing git" -ForegroundColor Yellow
 git init

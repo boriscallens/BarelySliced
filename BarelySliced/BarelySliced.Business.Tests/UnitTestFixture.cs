@@ -9,7 +9,7 @@ public class UnitTestFixture : IServiceProvider, IDisposable
     public UnitTestFixture()
     {
         var serviceCollection = new ServiceCollection();
-        // Add services to the collection
+        serviceCollection.AddInMemoryPersistence();
         _provider = serviceCollection.BuildServiceProvider();
     }
 
