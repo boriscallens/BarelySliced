@@ -9,6 +9,8 @@
   <ItemGroup>
     <ProjectReference Include="..\BarelySliced.Business.Tests\BarelySliced.Business.Tests.csproj" />
     <ProjectReference Include="..\BarelySliced.Business\BarelySliced.Business.csproj" />
+    <ProjectReference Include="..\BarelySliced.Persistence.Tests\BarelySliced.Persistence.Tests.csproj" />
+    <ProjectReference Include="..\BarelySliced.Persistence\BarelySliced.Persistence.csproj" />
   </ItemGroup>
 
   <Target Name="BsFeatureTemplate" AfterTargets="Build">

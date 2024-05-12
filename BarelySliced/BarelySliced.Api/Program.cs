@@ -1,7 +1,11 @@
 using BarelySliced.Api;
+using BarelySliced.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
-ConfigureServices(builder.Services);
+builder.Configuration.AddJsonFile("appsettings.json");
+builder.Configuration.AddEnvironmentVariables();
+
+ConfigureServices(builder.Services, builder.Configuration);
 var app = builder.Build();
 
 ConfigureMiddleware(app);
@@ -9,9 +13,11 @@ ConfigureEndpoints(app);
 
 app.Run();
 
-void ConfigureServices(IServiceCollection services)
+void ConfigureServices(IServiceCollection services, IConfiguration configuration)
 {
-    // Add services to the container.
+    services.AddLogging();
+    services.AddPersistence(configuration);
+
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();

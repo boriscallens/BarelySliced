@@ -1,5 +1,6 @@
 param (
     [string]$solutionName = $(Read-Host "Please provide a solution name"),
+    [string]$domain,
     [switch]$force
 )
 
@@ -28,19 +29,43 @@ EndProject
 	Add-Content -Path $slnFilePath -Value $slnContent
 }
 
-function AddFileTemplate($templateName, $path){
-    if($force) {
-        Write-Host "Force creating $templateName files at $pat" -ForegroundColor Yellow
-        dotnet new $templateName -n $featureName -o "$path" --force
-    }else {
-        Write-Host "Creating $templateName files at $pat" -ForegroundColor Cyan
-        dotnet new $templateName -n $featureName -o "$path"
+function AddFileTemplate($templateName, $featureName, $path){  
+    ## if the template name is empty, write a helpfull message and Exit
+    if([string]::IsNullOrWhiteSpace($templateName)) {
+        Write-Error "Invalid template name"
+        Exit 1
     }
+
+    ## if the path is empty or does not exist, write a helpfull message and Exit
+    if([string]::IsNullOrWhiteSpace($path)) {
+        Write-Error "Invalid output path $path"
+        Exit 1
+    }
+
+    Write-Host "Adding $templateName to $path" -ForegroundColor Yellow
+    $command = "dotnet new $templateName"
+
+    if (![string]::IsNullOrWhiteSpace($featureName)) {
+        Write-Host "Using feature name $featureName" -ForegroundColor Yellow
+        $command += " -n $featureName"
+    }
+
+    $command += " --output $path"
+
+    if ($force) {
+        Write-Host "Using force flag" -ForegroundColor Yellow
+        $command += " --force"
+    }
+
+    Invoke-Expression -Command $command
 }
 
 $originalLocation = $PWD.Path
 $folderPath = Join-Path $originalLocation $solutionName
 $slnFilePath = Join-Path $folderPath "$solutionName.sln"
+if ([string]::IsNullOrWhiteSpace($domain)) {
+    $domain = $solutionName.Split('.')[-1]
+}
 
 if (Test-Path $folderPath -PathType Container) {
     if ($force) {
@@ -118,14 +143,25 @@ dotnet add "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" pa
 dotnet add "$solutionName.Infrastructure/$solutionName.Infrastructure.csproj" package Microsoft.Extensions.DependencyInjection.Abstractions --no-restore
 dotnet add "$solutionName.Infrastructure/$solutionName.Infrastructure.csproj" package MediatR --no-restore
 
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Azure.Identity --no-restore
 dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.EntityFrameworkCore --no-restore
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.EntityFrameworkCore.Sqlite --no-restore
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.EntityFrameworkCore.SqlServer --no-restore
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.Extensions.Configuration.Abstractions --no-restore
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore --no-restore
+
+dotnet add "$solutionName.Persistence.Tests/$solutionName.Persistence.Tests.csproj" package Microsoft.Extensions.Configuration --no-restore
 
 dotnet restore
 
-# AddProjectTemplate "bspersistencetestproject" $domainPath
-AddProjectTemplate "bspersistenceproject" $domainPath
-# AddProjectTemplate "bsbusinessproject" $businessPath
-AddProjectTemplate "bsbusinesstestproject" $businessTestPath
+AddFileTemplate "bspersistenceproject" $domain "$solutionName.Persistence"
+AddFileTemplate "bspersistencetestproject" $domain "$solutionName.Persistence.Tests"
+# AddFileTemplate "bsbusinessproject" $domain "$solutionName.Business"
+AddFileTemplate "bsbusinesstestproject" $domain "$solutionName.Business.Tests"
+
+Write-Host "Cleaning up placeholder files" -ForegroundColor Yellow
+Get-ChildItem -Recurse -Filter "class1.cs" | Remove-Item -Force
+Get-ChildItem -Recurse -Filter "unittest1.cs" | Remove-Item -Force
 
 Write-Host "Initializing git" -ForegroundColor Yellow
 git init

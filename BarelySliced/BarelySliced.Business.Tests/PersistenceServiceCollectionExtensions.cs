@@ -10,16 +10,16 @@ public static class PersistenceServiceCollectionExtensions
 {
     public static void AddInMemoryPersistence(this IServiceCollection services, bool isTransient = true)
     {
-        static SliverDBContext SqlLiteInMemoryFactory(IServiceProvider provider)
+        static SliverDbContext SqlLiteInMemoryFactory(IServiceProvider provider)
         {
             var connection = new SqliteConnection("Filename=:memory:");
             connection.Open();
-            var options = new DbContextOptionsBuilder<SliverDBContext>()
+            var options = new DbContextOptionsBuilder<SliverDbContext>()
                 .UseSqlite(connection)
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging()
                 .Options;
-            var context = new SliverDBContext(options);
+            var context = new SliverDbContext(options);
             context.Database.EnsureCreated();
             return context;
         }

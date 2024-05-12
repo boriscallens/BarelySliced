@@ -6,9 +6,9 @@ namespace BarelySliced.Business.Features.MyFeature
 {
     public class MyFeatureHandler: IRequestHandler<MyFeatureRequest, MyFeatureResponse>
     {
-        private readonly SliverDBContext db;
+        private readonly SliverDbContext db;
 
-        public MyFeatureHandler(SliverDBContext db)
+        public MyFeatureHandler(SliverDbContext db)
         {
             this.db = db;
         }

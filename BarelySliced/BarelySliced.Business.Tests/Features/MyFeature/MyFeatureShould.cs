@@ -7,11 +7,11 @@ namespace BarelySliced.Business.Tests.Features.MyFeature;
 
 public class MyFeatureShould: IClassFixture<UnitTestFixture>
 {
-    private readonly SliverDBContext db;
+    private readonly SliverDbContext db;
 
     public MyFeatureShould(UnitTestFixture fixture)
     {
-        db = fixture.GetRequiredService<SliverDBContext>();
+        db = fixture.GetRequiredService<SliverDbContext>();
     }
 
     [Fact]

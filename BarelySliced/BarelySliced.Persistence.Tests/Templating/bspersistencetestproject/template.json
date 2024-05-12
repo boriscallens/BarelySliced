@@ -4,9 +4,9 @@
     "Common",
     "Code"
   ],
-  "identity": "BarelySliced.projects.persistence",
-  "name": "Barely Sliced Persistence Project",
-  "shortName": "bspersistenceproject",
+  "identity": "BarelySliced.Projects.Persistence.Tests",
+  "name": "Barely Sliced Persistence Test Project",
+  "shortName": "bspersistencetestproject",
   "tags": {
     "language": "C#",
     "type": "item"
@@ -26,7 +26,7 @@
         "source": "rootnamespace",
         "steps": [
           {
-            "regex": "\\.Persistence$",
+            "regex": "\\.Persistence\\.Tests$",
             "replacement": ""
           }
         ]
@@ -80,6 +80,30 @@
         "removeEmptyValues": true
       }
     },
+    "persistenceTestNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Persistence.Tests",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Persistence"
+          },
+          {
+            "type": "const",
+            "value": "Tests"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    },
     "persistenceNamespace": {
       "type": "generated",
       "generator": "join",
@@ -104,7 +128,7 @@
   "constraints": {
     "csharp-only": {
       "type": "project-capability",
-      "args": "CSharp"
+      "args": "CSharp & TestContainer"
     }
   }
 }

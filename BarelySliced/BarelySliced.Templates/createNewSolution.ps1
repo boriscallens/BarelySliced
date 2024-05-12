@@ -1,15 +1,8 @@
 param (
     [string]$solutionName = $(Read-Host "Please provide a solution name"),
-    [string]$domain = $(Read-Host "What domain is the solution about?"),
+    [string]$domain,
     [switch]$force
 )
-
-function ValidateDomain {
-    if($domain -match "\s") {
-        Write-Error "Please keep the domain to a single word or leave empty"
-        Exit 1
-    }
-}
 
 function AddSolutionItems {
     param(
@@ -70,8 +63,9 @@ function AddFileTemplate($templateName, $featureName, $path){
 $originalLocation = $PWD.Path
 $folderPath = Join-Path $originalLocation $solutionName
 $slnFilePath = Join-Path $folderPath "$solutionName.sln"
-
-ValidateDomain;
+if ([string]::IsNullOrWhiteSpace($domain)) {
+    $domain = $solutionName.Split('.')[-1]
+}
 
 if (Test-Path $folderPath -PathType Container) {
     if ($force) {
@@ -90,7 +84,6 @@ Write-Host "Started creating solution $solutionName" -ForegroundColor Yellow
 dotnet new sln -n $solutionName
 dotnet new gitignore
 dotnet new editorconfig
-
 AddSolutionItems  `
     -slnFilePath $slnFilePath `
     -solutionFolderName "Misc" `
@@ -100,7 +93,6 @@ Write-Host "Adding class libraries" -ForegroundColor Yellow
 dotnet new classlib -n "$solutionName.Domain" --no-restore
 
 dotnet new classlib -n "$solutionName.Persistence" --no-restore
-dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" reference "$solutionName.Domain/$solutionName.Domain.csproj"
 
 dotnet new classlib -n "$solutionName.Business" --no-restore
 dotnet add "$solutionName.Business/$solutionName.Business.csproj" reference "$solutionName.Persistence/$solutionName.Persistence.csproj"
@@ -121,7 +113,6 @@ dotnet add "$solutionName.Domain.Tests/$solutionName.Domain.Tests.csproj" refere
 
 dotnet new xunit -n "$solutionName.Business.Tests" --no-restore
 dotnet add "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" reference "$solutionName.Business/$solutionName.Business.csproj"
-dotnet add "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" reference "$solutionName.Domain/$solutionName.Domain.csproj"
 dotnet add "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" reference "$solutionName.Persistence/$solutionName.Persistence.csproj"
 
 dotnet new xunit -n "$solutionName.Persistence.Tests" --no-restore
@@ -152,13 +143,20 @@ dotnet add "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" pa
 dotnet add "$solutionName.Infrastructure/$solutionName.Infrastructure.csproj" package Microsoft.Extensions.DependencyInjection.Abstractions --no-restore
 dotnet add "$solutionName.Infrastructure/$solutionName.Infrastructure.csproj" package MediatR --no-restore
 
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Azure.Identity --no-restore
 dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.EntityFrameworkCore --no-restore
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.EntityFrameworkCore.Sqlite --no-restore
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.EntityFrameworkCore.SqlServer --no-restore
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.Extensions.Configuration.Abstractions --no-restore
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore --no-restore
+
+dotnet add "$solutionName.Persistence.Tests/$solutionName.Persistence.Tests.csproj" package Microsoft.Extensions.Configuration --no-restore
 
 dotnet restore
 
 AddFileTemplate "bspersistenceproject" $domain "$solutionName.Persistence"
+AddFileTemplate "bspersistencetestproject" $domain "$solutionName.Persistence.Tests"
 # AddFileTemplate "bsbusinessproject" $domain "$solutionName.Business"
-# AddFileTemplate "bsbusinessproject" $businessPath
 AddFileTemplate "bsbusinesstestproject" $domain "$solutionName.Business.Tests"
 
 Write-Host "Cleaning up placeholder files" -ForegroundColor Yellow

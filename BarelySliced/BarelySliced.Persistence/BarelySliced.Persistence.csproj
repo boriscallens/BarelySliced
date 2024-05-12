@@ -7,13 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
+    <PackageReference Include="Azure.Identity" Version="1.11.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.4" />
   </ItemGroup>
 
   <Target Name="BsPersistenceProjectTemplate" AfterTargets="Build">
     <ItemGroup>
         <PersistenceProject Include="SliverDbContext.cs" />
     </ItemGroup>
+      <ItemGroup>
+          <PersistenceProject Include="PersistenceServiceCollectionExtensions.cs" />
+      </ItemGroup>
     <ItemGroup>
         <PersistenceProjectConfig Include="Templating\bspersistenceproject\template.json" />
     </ItemGroup>
