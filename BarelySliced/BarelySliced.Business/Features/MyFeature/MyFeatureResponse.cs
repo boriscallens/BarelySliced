@@ -1,4 +1,6 @@
-﻿namespace BarelySliced.Business.Features.MyFeature;
+﻿using BarelySliced.Domain;
+
+namespace BarelySliced.Business.Features.MyFeature;
 
 public record MyFeatureResponse
 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,12 +23,29 @@ namespace BarelySliced.Persistence
             return services;
         }
 
-        public static IServiceCollection AddInMemoryPersistence(this IServiceCollection services)
+        public static IServiceCollection AddInMemoryPersistence(this IServiceCollection services, bool isTransient = true)
         {
-            services.AddDbContext<SliverDbContext>(options =>
+            static SliverDbContext SqlLiteInMemoryFactory(IServiceProvider provider)
             {
-                options.UseSqlite("Data Source=:memory:");
-            });
+                var connection = new SqliteConnection("Filename=:memory:");
+                connection.Open();
+                var options = new DbContextOptionsBuilder<SliverDbContext>()
+                    .UseSqlite(connection)
+                    .EnableDetailedErrors()
+                    .EnableSensitiveDataLogging()
+                    .Options;
+                var context = new SliverDbContext(options);
+                context.Database.EnsureCreated();
+                return context;
+            }
+            if (isTransient)
+            {
+                services.AddTransient(SqlLiteInMemoryFactory);
+            }
+            else
+            {
+                services.AddSingleton(SqlLiteInMemoryFactory);
+            }
             services.AddHealthChecks().AddDbContextCheck<SliverDbContext>();
             return services;
         }

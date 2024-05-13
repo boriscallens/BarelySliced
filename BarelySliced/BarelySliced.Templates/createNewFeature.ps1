@@ -69,10 +69,10 @@ function FindFullPath($solutionPath, $projectPath) {
 
 function AddFileTemplate($templateName, $path){
     if($force) {
-        Write-Host "Force creating $templateName files at $businessPath" -ForegroundColor Yellow
+        Write-Host "Force creating $templateName files at $path" -ForegroundColor Yellow
         dotnet new $templateName -n $featureName -o "$path" --force
     }else {
-        Write-Host "Creating $templateName files at $businessPath" -ForegroundColor Cyan
+        Write-Host "Creating $templateName files at $path" -ForegroundColor Cyan
         dotnet new $templateName -n $featureName -o "$path"
     }
 }
@@ -97,5 +97,4 @@ Write-Host ("    {0,-15}" -f "* api test") -NoNewline; Write-Host " $apiTestProj
 Write-Host
 
 AddFileTemplate "bsfeature-business" $businessPath
-AddFileTemplate "bstestproject" $businessTestPath
 AddFileTemplate "bsfeature-tests" $businessTestPath

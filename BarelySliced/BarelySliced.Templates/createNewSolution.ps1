@@ -93,9 +93,11 @@ Write-Host "Adding class libraries" -ForegroundColor Yellow
 dotnet new classlib -n "$solutionName.Domain" --no-restore
 
 dotnet new classlib -n "$solutionName.Persistence" --no-restore
+dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" reference "$solutionName.Domain/$solutionName.Domain.csproj"
 
 dotnet new classlib -n "$solutionName.Business" --no-restore
 dotnet add "$solutionName.Business/$solutionName.Business.csproj" reference "$solutionName.Persistence/$solutionName.Persistence.csproj"
+dotnet add "$solutionName.Business/$solutionName.Business.csproj" reference "$solutionName.Domain/$solutionName.Domain.csproj"
 
 dotnet new classlib -n "$solutionName.Infrastructure" --no-restore
 dotnet new webapi -n "$solutionName.Api" -minimal --no-restore

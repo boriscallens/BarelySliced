@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BarelySliced.Domain\BarelySliced.Domain.csproj" />
     <ProjectReference Include="..\BarelySliced.Persistence\BarelySliced.Persistence.csproj" />
   </ItemGroup>
 

@@ -41,7 +41,6 @@
   <Target Name="BsTestProjectTemplate" AfterTargets="Build">
     <ItemGroup>
         <TestProject Include="UnittestFixture.cs" />
-        <TestProject Include="PersistenceServiceCollectionExtensions.cs" />
     </ItemGroup>
     <ItemGroup>
         <TestProjectConfig Include="Templating\bstestproject\template.json" />

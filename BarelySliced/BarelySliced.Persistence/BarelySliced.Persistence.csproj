@@ -15,6 +15,10 @@
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BarelySliced.Domain\BarelySliced.Domain.csproj" />
+  </ItemGroup>
+
   <Target Name="BsPersistenceProjectTemplate" AfterTargets="Build">
     <ItemGroup>
         <PersistenceProject Include="SliverDbContext.cs" />
