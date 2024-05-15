@@ -134,6 +134,8 @@ dotnet sln "$solutionName.sln" add --solution-folder Tests `
     "$solutionName.Api.Tests/$solutionName.Api.Tests.csproj"
 
 Write-Host "Adding nuget packages" -ForegroundColor Yellow
+dotnet add "$solutionName.Api/$solutionName.Api.csproj" package Microsoft.EntityFrameworkCore.Design --no-restore
+
 dotnet add "$solutionName.Business/$solutionName.Business.csproj" package MediatR --no-restore
 
 dotnet add "$solutionName.Domain/$solutionName.Domain.csproj" package StronglyTypedId --no-restore

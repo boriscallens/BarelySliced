@@ -1,22 +1,27 @@
 using BarelySliced.Api;
+using BarelySliced.Infrastructure;
 using BarelySliced.Persistence;
+
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json");
 builder.Configuration.AddEnvironmentVariables();
 
 ConfigureServices(builder.Services, builder.Configuration);
-var app = builder.Build();
+var weatherApp = builder.Build();
 
-ConfigureMiddleware(app);
-ConfigureEndpoints(app);
+ConfigureMiddleware(weatherApp);
+ConfigureEndpoints(weatherApp);
 
-app.Run();
+weatherApp.Run();
+return;
 
 void ConfigureServices(IServiceCollection services, IConfiguration configuration)
 {
     services.AddLogging();
     services.AddPersistence(configuration);
+    services.AddMediator();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     services.AddEndpointsApiExplorer();
@@ -25,14 +30,15 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
 
 void ConfigureMiddleware(WebApplication app)
 {
-    // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseDeveloperExceptionPage();
     }
 
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.UseHttpsRedirection();
+    app.Services.CreateScope().ServiceProvider.GetRequiredService<SliverDbContext>().Database.Migrate();
 }
 
 void ConfigureEndpoints(WebApplication app)
