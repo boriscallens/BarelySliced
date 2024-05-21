@@ -8,35 +8,33 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json");
 builder.Configuration.AddEnvironmentVariables();
 
-ConfigureServices(builder.Services, builder.Configuration);
+ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
+
 var weatherApp = builder.Build();
 
-ConfigureMiddleware(weatherApp);
+ConfigureMiddleware(weatherApp, builder.Configuration);
 ConfigureEndpoints(weatherApp);
 
 weatherApp.Run();
 return;
 
-void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+void ConfigureServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
 {
     services.AddLogging();
-    services.AddPersistence(configuration);
+    services.AddPersistence(configuration, environment.IsDevelopment());
     services.AddMediator();
-
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    services.AddEndpointsApiExplorer();
-    services.AddSwaggerGen();
+    services.AddAuth(configuration);
+    services.AddOpenApi(configuration);
 }
 
-void ConfigureMiddleware(WebApplication app)
+void ConfigureMiddleware(WebApplication app, IConfiguration configuration)
 {
     if (app.Environment.IsDevelopment())
     {
         app.UseDeveloperExceptionPage();
     }
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseOpenApi(configuration);
     app.UseHttpsRedirection();
     app.Services.CreateScope().ServiceProvider.GetRequiredService<SliverDbContext>().Database.Migrate();
 }

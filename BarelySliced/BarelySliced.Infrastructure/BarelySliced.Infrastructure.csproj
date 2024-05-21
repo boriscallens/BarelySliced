@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BarelySliced.Business\BarelySliced.Business.csproj" />
     <ProjectReference Include="..\BarelySliced.Persistence\BarelySliced.Persistence.csproj" />
   </ItemGroup>
 

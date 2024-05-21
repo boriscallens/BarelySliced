@@ -135,8 +135,12 @@ dotnet sln "$solutionName.sln" add --solution-folder Tests `
 
 Write-Host "Adding nuget packages" -ForegroundColor Yellow
 dotnet add "$solutionName.Api/$solutionName.Api.csproj" package Microsoft.EntityFrameworkCore.Design --no-restore
+dotnet add "$solutionName.Api/$solutionName.Api.csproj" package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore --no-restore
+dotnet add "$solutionName.Api/$solutionName.Api.csproj" package Microsoft.AspNetCore.OpenApi --prerelease --no-restore
+dotnet add "$solutionName.Api/$solutionName.Api.csproj" package Microsoft.Extensions.ApiDescription.Server --prerelease --no-restore
 
 dotnet add "$solutionName.Business/$solutionName.Business.csproj" package MediatR --no-restore
+dotnet add "$solutionName.Business/$solutionName.Business.csproj" package Microsoft.AspNetCore.Authorization --no-restore
 
 dotnet add "$solutionName.Domain/$solutionName.Domain.csproj" package StronglyTypedId --no-restore
 dotnet add "$solutionName.Domain/$solutionName.Domain.csproj" package ValueOf --no-restore

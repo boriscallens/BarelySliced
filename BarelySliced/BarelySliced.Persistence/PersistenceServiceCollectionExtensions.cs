@@ -7,7 +7,7 @@ namespace BarelySliced.Persistence
 {
     public static class PersistenceServiceCollectionExtensions
     {
-        public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration, bool isDevelopment)
         {
             services.AddDbContext<SliverDbContext>(options =>
             {
@@ -17,7 +17,8 @@ namespace BarelySliced.Persistence
                     throw new ArgumentException("Connection string cannot be null or empty.", nameof(configuration));
                 }
                 options.UseSqlServer(connectionString);
-                
+                options.EnableSensitiveDataLogging(isDevelopment);
+                options.EnableDetailedErrors(isDevelopment);                
             });
             services.AddHealthChecks().AddDbContextCheck<SliverDbContext>();
             return services;

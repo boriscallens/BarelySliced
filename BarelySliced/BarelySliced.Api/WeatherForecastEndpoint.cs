@@ -1,32 +1,23 @@
+using BarelySliced.Business.Features.GetWeatherForecasts;
+using BarelySliced.Domain;
+
+using MediatR;
+
 namespace BarelySliced.Api
 {
     public static class WeatherForecastEndpoint
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         public static void MapWeatherForecastEndpoint(WebApplication app)
         {
-            app.MapGet("/weatherforecast", () =>
+            app.MapGet("/weatherforecast", async (IMediator mediator) =>
             {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    (
-                        DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        Random.Shared.Next(-20, 55),
-                        Summaries[Random.Shared.Next(Summaries.Length)]
-                    ))
-                    .ToArray();
-                return forecast;
+                var request = new GetWeatherForecastsRequest();
+                var response = await mediator.Send(request);
+                return response;
             })
+            .RequireAuthorization(Policies.ManageWeatherForecast)
             .WithName("GetWeatherForecast")
             .WithOpenApi();
-        }
-        record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-        {
-            public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
         }
     }
 }

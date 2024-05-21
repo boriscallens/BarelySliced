@@ -36,7 +36,7 @@ namespace BarelySliced.Persistence.Migrations
 
                     b.HasKey("Date");
 
-                    b.ToTable("WeatherForecasts");
+                    b.ToTable("WeatherForecasts", (string)null);
 
                     b.HasData(
                         new

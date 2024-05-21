@@ -22,7 +22,7 @@ public class PersistenceServiceCollectionExtensionsShould
             .AddInMemoryConnectionString("SliverDbContext", "Server=(localdb)\\MSSQLLocalDB;Database=SliverD;Trusted_Connection=True;")
             .Build();
 
-        var services = new ServiceCollection().AddPersistence(configuration);
+        var services = new ServiceCollection().AddPersistence(configuration, true);
 
         var serviceProvider = services.BuildServiceProvider();
         var dbContext = serviceProvider.GetRequiredService<SliverDbContext>();
@@ -35,7 +35,7 @@ public class PersistenceServiceCollectionExtensionsShould
         var configuration = new ConfigurationBuilder().Build();
 
         // Act
-        var services = new ServiceCollection().AddPersistence(configuration);
+        var services = new ServiceCollection().AddPersistence(configuration, true);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -51,7 +51,7 @@ public class PersistenceServiceCollectionExtensionsShould
 
         var services = new ServiceCollection()
             .AddLogging()
-            .AddPersistence(configuration);
+            .AddPersistence(configuration, true);
 
         var serviceProvider = services.BuildServiceProvider();
         var healthCheck = serviceProvider.GetRequiredService<HealthCheckService>();
@@ -67,7 +67,7 @@ public class PersistenceServiceCollectionExtensionsShould
 
         var services = new ServiceCollection()
             .AddLogging()
-            .AddPersistence(configuration);
+            .AddPersistence(configuration, true);
 
         var serviceProvider = services.BuildServiceProvider();
         var healthCheck = serviceProvider.GetRequiredService<HealthCheckService>();
@@ -102,7 +102,7 @@ public class PersistenceServiceCollectionExtensionsShould
 
         var services = new ServiceCollection()
             .AddLogging()
-            .AddPersistence(configuration);
+            .AddPersistence(configuration, true);
 
         var serviceProvider = services.BuildServiceProvider();
         var healthCheck = serviceProvider.GetRequiredService<HealthCheckService>();
