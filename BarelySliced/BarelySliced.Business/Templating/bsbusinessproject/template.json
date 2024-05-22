@@ -1,0 +1,141 @@
+{
+  "author": "Boris Callens",
+  "classifications": [
+    "Common",
+    "Code"
+  ],
+  "identity": "BarelySliced.projects.business",
+  "name": "Barely Sliced Business Project",
+  "shortName": "bsbusinessproject",
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "sourceName": "MyFeature",
+  "preferNameDirectory": false,
+  "symbols": {
+    "rootnamespace": {
+      "type": "bind",
+      "binding": "msbuild:RootNamespace"
+    },
+    "solutionNamespace": {
+      "type": "generated",
+      "generator": "regex",
+      "dataType": "string",
+      "parameters": {
+        "source": "rootnamespace",
+        "steps": [
+          {
+            "regex": "\\.Business$",
+            "replacement": ""
+          }
+        ]
+      }
+    },
+    "domain": {
+      "type": "generated",
+      "generator": "regex",
+      "dataType": "string",
+      "replaces": "Sliver",
+      "parameters": {
+        "source": "solutionNamespace",
+        "steps": [
+          {
+            "regex": ".*\\.([^.]+)$",
+            "replacement": "$1"
+          }
+        ]
+      }
+    },
+    "apiNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Api",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Api"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    },
+    "persistenceNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Persistence",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Persistence"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    },
+    "businessNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Business",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Business"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    },
+    "businessTestNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Business.Tests",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Business"
+          },
+          {
+            "type": "const",
+            "value": "Tests"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    }
+  },
+  "constraints": {
+    "csharp-only": {
+      "type": "project-capability",
+      "args": "CSharp"
+    }
+  }
+}

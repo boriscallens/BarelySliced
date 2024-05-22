@@ -164,7 +164,7 @@ dotnet restore
 
 AddFileTemplate "bspersistenceproject" $domain "$solutionName.Persistence"
 AddFileTemplate "bspersistencetestproject" $domain "$solutionName.Persistence.Tests"
-# AddFileTemplate "bsbusinessproject" $domain "$solutionName.Business"
+AddFileTemplate "bsbusinessproject" $domain "$solutionName.Business"
 AddFileTemplate "bsbusinesstestproject" $domain "$solutionName.Business.Tests"
 
 Write-Host "Cleaning up placeholder files" -ForegroundColor Yellow
