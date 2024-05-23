@@ -67,11 +67,11 @@
         "removeEmptyValues": true
       }
     },
-    "persistenceNamespace": {
+    "apiTestNamespace": {
       "type": "generated",
       "generator": "join",
       "dataType": "string",
-      "replaces": "BarelySliced.Persistence",
+      "replaces": "BarelySliced.Api.Tests",
       "parameters": {
         "symbols": [
           {
@@ -80,7 +80,11 @@
           },
           {
             "type": "const",
-            "value": "Persistence"
+            "value": "Api"
+          },
+          {
+            "type": "const",
+            "value": "Tests"
           }
         ],
         "separator": ".",
@@ -101,6 +105,138 @@
           {
             "type": "const",
             "value": "Business"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    },
+    "businessTestNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Business.Tests",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Business"
+          },
+          {
+            "type": "const",
+            "value": "Tests"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    },
+    "domainNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Domain",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Domain"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    },
+    "infrastructureNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Infrastructure",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Infrastructure"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    },
+    "infrastructureTestNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Infrastructure.Tests",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Infrastructure"
+          },
+          {
+            "type": "const",
+            "value": "Tests"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    },
+    "persistenceNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Persistence",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Persistence"
+          }
+        ],
+        "separator": ".",
+        "removeEmptyValues": true
+      }
+    },
+    "persistenceTestNamespace": {
+      "type": "generated",
+      "generator": "join",
+      "dataType": "string",
+      "replaces": "BarelySliced.Persistence.Tests",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "solutionNamespace"
+          },
+          {
+            "type": "const",
+            "value": "Persistence"
+          },
+          {
+            "type": "const",
+            "value": "Tests"
           }
         ],
         "separator": ".",

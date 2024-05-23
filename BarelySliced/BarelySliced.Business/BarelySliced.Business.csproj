@@ -16,22 +16,20 @@
     <ProjectReference Include="..\BarelySliced.Persistence\BarelySliced.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
   <Target Name="BsBusinessProjectTemplate" AfterTargets="Build">
     <ItemGroup>
-      <Authorization Include="Authorization\**\*.cs" />
+      <Authorization Include="Authorization\*.cs" />
     </ItemGroup>
     <ItemGroup>
       <BusinessProjectConfig Include="Templating\bsBusinessproject\template.json" />
     </ItemGroup>
+    
     <Copy SourceFiles="@(Authorization)" DestinationFolder="$(OutputPath)bsBusinessproject\Authorization\%(RecursiveDir)" />
     <Copy SourceFiles="@(BusinessProjectConfig)" DestinationFolder="$(OutputPath)bsBusinessproject\.template.config\" />
 
     <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bsBusinessproject --force" />
   </Target>
+  
   <Target Name="BsFeatureTemplate" AfterTargets="Build">
     <ItemGroup>
       <MyFeature Include="Features\MyFeature\**\*.*" />
@@ -39,8 +37,10 @@
     <ItemGroup>
       <MyFeatureConfig Include="Templating\bsfeature\template.json" />
     </ItemGroup>
+    
     <Copy SourceFiles="@(MyFeature)" DestinationFolder="$(OutputPath)bsfeature\Features\MyFeature\%(RecursiveDir)" />
     <Copy SourceFiles="@(MyFeatureConfig)" DestinationFolder="$(OutputPath)bsfeature\.template.config\" />
+    
     <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bsfeature --force" />
   </Target>
 </Project>

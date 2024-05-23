@@ -29,6 +29,27 @@ EndProject
 	Add-Content -Path $slnFilePath -Value $slnContent
 }
 
+function AddMissingRootNamespace($projectPath, $rootNamespace) {
+    $projectFile = Get-Content -Path $projectPath
+    $projectFile | ForEach-Object {
+        if ($_ -match "<RootNamespace>") {
+            return
+        }
+    }
+
+
+    # Find the first propertygroup, and add the "<RootNamespace>$rootNamespace</RootNamespace>" tag.
+    $projectFile | ForEach-Object {
+        if ($_ -match "<PropertyGroup>") {
+            $_
+            "<RootNamespace>$rootNamespace</RootNamespace>"
+        }
+        else {
+            $_
+        }
+    } | Set-Content -Path $projectPath
+}
+
 function AddFileTemplate($templateName, $featureName, $path){  
     ## if the template name is empty, write a helpfull message and Exit
     if([string]::IsNullOrWhiteSpace($templateName)) {
@@ -100,6 +121,9 @@ dotnet add "$solutionName.Business/$solutionName.Business.csproj" reference "$so
 dotnet add "$solutionName.Business/$solutionName.Business.csproj" reference "$solutionName.Domain/$solutionName.Domain.csproj"
 
 dotnet new classlib -n "$solutionName.Infrastructure" --no-restore
+dotnet add "$solutionName.Infrastructure/$solutionName.Infrastructure.csproj" reference "$solutionName.Domain/$solutionName.Domain.csproj"
+dotnet add "$solutionName.Infrastructure/$solutionName.Infrastructure.csproj" reference "$solutionName.Business/$solutionName.Business.csproj"
+
 dotnet new webapi -n "$solutionName.Api" -minimal --no-restore
 
 dotnet sln "$solutionName.sln" add `
@@ -133,6 +157,18 @@ dotnet sln "$solutionName.sln" add --solution-folder Tests `
     "$solutionName.Infrastructure.Tests/$solutionName.Infrastructure.Tests.csproj" `
     "$solutionName.Api.Tests/$solutionName.Api.Tests.csproj"
 
+Write-Host "Setting root namespaces" -ForegroundColor Yellow
+AddMissingRootNamespace "$solutionName.Domain/$solutionName.Domain.csproj" "$solutionName.Domain"
+AddMissingRootNamespace "$solutionName.Persistence/$solutionName.Persistence.csproj" "$solutionName.Persistence"
+AddMissingRootNamespace "$solutionName.Business/$solutionName.Business.csproj" "$solutionName.Business"
+AddMissingRootNamespace "$solutionName.Infrastructure/$solutionName.Infrastructure.csproj" "$solutionName.Infrastructure"
+AddMissingRootNamespace "$solutionName.Api/$solutionName.Api.csproj" "$solutionName.Api"
+AddMissingRootNamespace "$solutionName.Domain.Tests/$solutionName.Domain.Tests.csproj" "$solutionName.Domain.Tests"
+AddMissingRootNamespace "$solutionName.Persistence.Tests/$solutionName.Persistence.Tests.csproj" "$solutionName.Persistence.Tests"
+AddMissingRootNamespace "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" "$solutionName.Business.Tests"
+AddMissingRootNamespace "$solutionName.Infrastructure.Tests/$solutionName.Infrastructure.Tests.csproj" "$solutionName.Infrastructure.Tests"
+AddMissingRootNamespace "$solutionName.Api.Tests/$solutionName.Api.Tests.csproj" "$solutionName.Api.Tests"
+
 Write-Host "Adding nuget packages" -ForegroundColor Yellow
 dotnet add "$solutionName.Api/$solutionName.Api.csproj" package Microsoft.EntityFrameworkCore.Design --no-restore
 dotnet add "$solutionName.Api/$solutionName.Api.csproj" package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore --no-restore
@@ -148,8 +184,8 @@ dotnet add "$solutionName.Domain/$solutionName.Domain.csproj" package ValueOf --
 dotnet add "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" package Microsoft.Extensions.DependencyInjection --no-restore
 dotnet add "$solutionName.Business.Tests/$solutionName.Business.Tests.csproj" package Microsoft.EntityFrameworkCore.Sqlite --no-restore
 
-dotnet add "$solutionName.Infrastructure/$solutionName.Infrastructure.csproj" package Microsoft.Extensions.DependencyInjection.Abstractions --no-restore
 dotnet add "$solutionName.Infrastructure/$solutionName.Infrastructure.csproj" package MediatR --no-restore
+dotnet add "$solutionName.Infrastructure/$solutionName.Infrastructure.csproj" package Microsoft.AspNetCore.Authentication.JwtBearer --no-restore
 
 dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Azure.Identity --no-restore
 dotnet add "$solutionName.Persistence/$solutionName.Persistence.csproj" package Microsoft.EntityFrameworkCore --no-restore
@@ -162,10 +198,12 @@ dotnet add "$solutionName.Persistence.Tests/$solutionName.Persistence.Tests.cspr
 
 dotnet restore
 
+AddFileTemplate "bsdomainproject" $domain "$solutionName.Domain"
 AddFileTemplate "bspersistenceproject" $domain "$solutionName.Persistence"
 AddFileTemplate "bspersistencetestproject" $domain "$solutionName.Persistence.Tests"
 AddFileTemplate "bsbusinessproject" $domain "$solutionName.Business"
 AddFileTemplate "bsbusinesstestproject" $domain "$solutionName.Business.Tests"
+AddFileTemplate "bsinfrastructureproject" $domain "$solutionName.Infrastructure"
 
 Write-Host "Cleaning up placeholder files" -ForegroundColor Yellow
 Get-ChildItem -Recurse -Filter "class1.cs" | Remove-Item -Force

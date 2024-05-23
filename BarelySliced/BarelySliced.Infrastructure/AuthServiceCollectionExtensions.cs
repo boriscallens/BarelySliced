@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 
 using BarelySliced.Business.Authorization;
-using BarelySliced.Domain;
+using BarelySliced.Domain.Authorization;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

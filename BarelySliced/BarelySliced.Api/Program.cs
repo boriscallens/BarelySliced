@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json");
 builder.Configuration.AddEnvironmentVariables();
-
 ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
 
 var weatherApp = builder.Build();

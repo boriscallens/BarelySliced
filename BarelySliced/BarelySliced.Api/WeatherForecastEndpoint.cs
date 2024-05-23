@@ -1,5 +1,5 @@
 using BarelySliced.Business.Features.GetWeatherForecasts;
-using BarelySliced.Domain;
+using BarelySliced.Domain.Authorization;
 
 using MediatR;
 

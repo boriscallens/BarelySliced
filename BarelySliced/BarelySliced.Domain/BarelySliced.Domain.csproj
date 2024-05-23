@@ -1,9 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <Target Name="BsDomainProjectTemplate" AfterTargets="Build">
+    <ItemGroup>
+      <Authorization Include="Authorization\**\*.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <DomainProjectConfig Include="Templating\bsdomainproject\template.json" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Authorization)" DestinationFolder="$(OutputPath)bsDomainproject\Authorization\%(RecursiveDir)" />
+    <Copy SourceFiles="@(DomainProjectConfig)" DestinationFolder="$(OutputPath)bsDomainproject\.template.config\" />
+
+    <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bsDomainproject --force" />
+  </Target>
 
 </Project>

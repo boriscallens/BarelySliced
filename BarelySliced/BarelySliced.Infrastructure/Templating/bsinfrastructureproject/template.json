@@ -4,14 +4,14 @@
     "Common",
     "Code"
   ],
-  "identity": "BarelySliced.projects.persistence",
-  "name": "Barely Sliced Persistence Project",
-  "shortName": "bspersistenceproject",
+  "identity": "BarelySliced.projects.infrastructure",
+  "name": "Barely Sliced Infrastructure Project",
+  "shortName": "bsinfrastructureproject",
   "tags": {
     "language": "C#",
     "type": "item"
   },
-  "sourceName": "Sliver",
+  "sourceName": "MyFeature",
   "preferNameDirectory": false,
   "symbols": {
     "rootnamespace": {
@@ -26,20 +26,17 @@
         "source": "rootnamespace",
         "steps": [
           {
-            "regex": "\\.Persistence$",
+            "regex": "\\.Infrastructure$",
             "replacement": ""
           }
         ]
       }
     },
-    "domainParameter": {
-      "type": "parameter",
-      "binding": "name"
-    },
-    "domainFromNamespace": {
+    "domain": {
       "type": "generated",
       "generator": "regex",
       "dataType": "string",
+      "replaces": "Sliver",
       "parameters": {
         "source": "solutionNamespace",
         "steps": [
@@ -48,16 +45,6 @@
             "replacement": "$1"
           }
         ]
-      }
-    },
-    "domain": {
-      "type": "generated",
-      "generator": "coalesce",
-      "dataType": "string",
-      "replaces": "Sliver",
-      "parameters": {
-        "sourceVariableName": "domainParameter",
-        "fallbackVariableName": "domainFromNamespace"
       }
     },
     "apiNamespace": {

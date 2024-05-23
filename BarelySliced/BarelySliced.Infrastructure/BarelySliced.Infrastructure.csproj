@@ -7,14 +7,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="MediatR" Version="12.2.0">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BarelySliced.Business\BarelySliced.Business.csproj" />
     <ProjectReference Include="..\BarelySliced.Persistence\BarelySliced.Persistence.csproj" />
   </ItemGroup>
+
+  <Target Name="BsInfrastructureProjectTemplate" AfterTargets="Build">
+    <ItemGroup>
+      <ServiceCollections Include="*ServiceCollectionExtensions.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <InfrastructureProjectConfig Include="Templating\bsinfrastructureproject\template.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ServiceCollections)" DestinationFolder="$(OutputPath)bsInfrastructureproject\%(RecursiveDir)" />
+    <Copy SourceFiles="@(InfrastructureProjectConfig)" DestinationFolder="$(OutputPath)bsInfrastructureproject\.template.config\" />
+
+    <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bsInfrastructureproject --force" />
+  </Target>
 
 </Project>

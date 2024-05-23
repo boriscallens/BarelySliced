@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -28,27 +28,30 @@
     <ProjectReference Include="..\BarelySliced.Infrastructure\BarelySliced.Infrastructure.csproj" />
   </ItemGroup>
 
-  <Target Name="BsFeatureTemplate" AfterTargets="Build">
+  <Target Name="BsFeatureTestTemplate" AfterTargets="Build">
     <ItemGroup>
-        <MyFeature Include="Features\MyFeature\**\*.*" />
+      <MyFeature Include="Features\MyFeature\**\*.*" />
     </ItemGroup>
     <ItemGroup>
-        <MyFeatureConfig Include="Templating\bsfeature\template.json" />
+      <MyFeatureConfig Include="Templating\bsfeaturetest\template.json" />
     </ItemGroup>
-    <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bsfeature --force" />
+
+    <Copy SourceFiles="@(MyFeature)" DestinationFolder="$(OutputPath)bsfeaturetest\Features\MyFeature\%(RecursiveDir)" />
+    <Copy SourceFiles="@(MyFeatureConfig)" DestinationFolder="$(OutputPath)bsfeaturetest\.template.config\" />
+
+    <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bsfeaturetest --force" />
   </Target>
-  
+
   <Target Name="BsTestProjectTemplate" AfterTargets="Build">
     <ItemGroup>
-        <TestProject Include="UnittestFixture.cs" />
+      <TestProject Include="UnittestFixture.cs" />
     </ItemGroup>
     <ItemGroup>
-        <TestProjectConfig Include="Templating\bstestproject\template.json" />
+      <TestProjectConfig Include="Templating\bstestproject\template.json" />
     </ItemGroup>
-	<Copy SourceFiles="@(TestProject)" DestinationFolder="$(OutputPath)bstestproject\%(RecursiveDir)" />
+    <Copy SourceFiles="@(TestProject)" DestinationFolder="$(OutputPath)bstestproject\%(RecursiveDir)" />
     <Copy SourceFiles="@(TestProjectConfig)" DestinationFolder="$(OutputPath)bstestproject\.template.config\" />
-	
-    <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bsfeature --force" />
+
     <Exec Condition="'$(Configuration)' == 'Debug'" Command="dotnet new install $(OutputPath)bstestproject --force" />
   </Target>
 </Project>

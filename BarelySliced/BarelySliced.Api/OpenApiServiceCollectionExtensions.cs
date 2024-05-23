@@ -1,9 +1,11 @@
-using BarelySliced.Domain;
+using BarelySliced.Domain.Authorization;
 
 using Microsoft.OpenApi.Models;
 
 namespace BarelySliced.Api
 {
+    // For now, I made a hard dependency on Auth0.
+    // If I find a real need or elegant solution to abstract this away without making things more complex, this is the place that should change.
     public static class OpenApiServiceCollectionExtensions
     {
         public static void AddOpenApi(this IServiceCollection services, IConfiguration configuration)

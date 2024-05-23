@@ -1,4 +1,4 @@
-﻿namespace BarelySliced.Domain
+﻿namespace BarelySliced.Domain.Authorization
 {
     public static class Policies
     {
